@@ -1,28 +1,34 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TableContext } from "../context/TableDataContext";
 import classNames from "classnames";
 
-type Props = {
-  setNewHeaders: (val: any) => void;
-  newHeaders: string[];
-};
+type Props = {};
 
-function GenerateSchema({ newHeaders, setNewHeaders }: Props) {
+function GenerateSchema({}: Props) {
+  const [newHeaders, setNewHeaders] = useState<string[]>([]);
   const [headerName, setHeaderName] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const { uploadData, setNewHeaderSchema } = useContext(TableContext) as any;
+  const { uploadData, setNewHeaderSchema, newHeaderSchema } = useContext(
+    TableContext
+  ) as any;
 
   const handleHeader = () => {
     setError("");
     if (newHeaders?.includes(headerName)) {
-      setError("Header Name already exist, Enter  a unique name.");
+      setError("Header Name already exist, Enter a unique name.");
+    } else if (!headerName) {
+      setError("Enter header name.");
     } else {
       setNewHeaders([...newHeaders, headerName]);
       setHeaderName("");
     }
   };
+
+  useEffect(() => {
+    setNewHeaders(newHeaderSchema);
+  }, [newHeaderSchema]);
 
   const onConfirmSchema = () => {
     setNewHeaderSchema(newHeaders);
@@ -35,7 +41,10 @@ function GenerateSchema({ newHeaders, setNewHeaders }: Props) {
       </p>
       <div className="bg-gray-100 max-w-sm rounded-md">
         {newHeaders?.map((item, index) => (
-          <div className="flex items-center border-b p-4 last:border-none border-gray-300 justify-between space-x-4">
+          <div
+            key={index}
+            className="flex items-center border-b p-4 last:border-none border-gray-300 justify-between space-x-4"
+          >
             <p key={index} className="text-gray-800 font-medium">
               <span>{index + 1}. </span>
               {item}

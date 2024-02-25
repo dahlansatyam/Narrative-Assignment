@@ -8,7 +8,6 @@ import GenerateSchema from "./components/GenerateSchema";
 
 function App() {
   const [sharedHeaders, setSharedHeaders] = useState<string[]>([]);
-  const [newHeaders, setNewHeaders] = useState<string[]>([]);
 
   return (
     <>
@@ -16,10 +15,7 @@ function App() {
       <TableDataContext>
         <Section>
           <Uploader setHeaders={setSharedHeaders} />
-          <GenerateSchema
-            setNewHeaders={setNewHeaders}
-            newHeaders={newHeaders}
-          />
+          <GenerateSchema />
           <Mapper sharedHeaders={sharedHeaders} />
         </Section>
       </TableDataContext>

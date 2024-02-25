@@ -31,22 +31,10 @@ const createMappings = (headers: string[] | null) => {
   }));
 };
 
-// const mapArray = (arr: any[]) => {
-//   return arr.flatMap((item) =>
-//     Object.entries(item).map(([key, value]) =>
-//       Array.isArray(value)
-//         ? value.map((nestedValue) => ({ ...item, [key]: nestedValue }))
-//         : { ...item, [key]: value }
-//     )
-//   );
-// };
-
 function Mapper({ sharedHeaders }: Props) {
   const [mappings, setMappings] = useState<TMapping[] | undefined>([]);
   const { uploadData, newHeaderSchema } = useContext(TableContext) as any;
   const [dataMapped, setDataMapped] = useState<any[]>([]);
-
-  console.log("test", { newHeaderSchema });
 
   useEffect(() => {
     setMappings(createMappings(sharedHeaders));
@@ -74,16 +62,12 @@ function Mapper({ sharedHeaders }: Props) {
     []
   );
   const handleMapping = () => {
-    console.log("Data", uploadData);
-    console.log("mappings", mappings);
     const mappedData = uploadData.map((item: any) => {
-      console.log("item", item);
       let mappedObj = {} as any;
       for (let k in item) {
         const foundMapping = mappings?.find(
           (value) => value.item.toLowerCase() === k.toLowerCase()
         );
-        // console.log("found mapping", foundMapping);
         if (foundMapping && foundMapping.mapsTo && foundMapping.mapType) {
           if (foundMapping.mapType === "single") {
             if (mappedObj[foundMapping.mapsTo]) {
@@ -119,7 +103,6 @@ function Mapper({ sharedHeaders }: Props) {
       }
       return mappedObj;
     });
-    // console.log("mappedData", mappedData);
     let modifiedMappedArr = [] as any;
     mappedData.forEach((item: any[]) => {
       Object.keys(item).forEach((key: any) => {
@@ -137,26 +120,6 @@ function Mapper({ sharedHeaders }: Props) {
         }
       });
     });
-    // const modifiedMappedData = mappedData.map((dat: any) => {
-    //   for (let k in dat) {
-    //     let returnVal = [];
-    //     if (Array.isArray(dat[k])) {
-    //       returnVal = dat[k].map((item: any) => ({
-    //         ...dat,
-    //         [k]: item,
-    //       }));
-    //     } else {
-    //       returnVal = [
-    //         {
-    //           ...dat,
-    //           [k]: dat[k],
-    //         },
-    //       ];
-    //     }
-    //     return returnVal;
-    //   }
-    // });
-    // console.log("Modified map", modifiedMappedArr);
     setDataMapped(modifiedMappedArr);
   };
 
@@ -200,23 +163,6 @@ function Mapper({ sharedHeaders }: Props) {
           </thead>
           <tbody>
             {dataMapped.map((row: any, rowIndex: number) => {
-              //   if (Array.isArray(Object.values(row))) {
-              //     return Object.values(row).map((rowData, index) => (
-              //       <tr
-              //         key={rowIndex}
-              //         className={rowIndex % 2 === 0 ? "bg-gray-100" : ""}
-              //       >
-              //         {Object.values(row).map((value: any, columnIndex) => (
-              //           <td
-              //             key={columnIndex}
-              //             className="py-2 px-4 border-b border-r text-sm text-center"
-              //           >
-              //             {value[index]}
-              //           </td>
-              //         ))}
-              //       </tr>
-              //     ));
-              //   }
               return (
                 <tr
                   key={rowIndex}
